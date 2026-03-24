@@ -1,0 +1,18 @@
+{
+  "name": "c4-skills",
+  "version": "0.1.0",
+  "description": "C4 architecture modeling and Structurizr DSL skills for creating, evolving, reviewing, and deploying software architecture models",
+  "author": {
+    "name": "Georges Martin",
+    "email": "jrjsmrtn@gmail.com"
+  },
+  "keywords": [
+    "c4-model",
+    "structurizr",
+    "architecture",
+    "diagrams",
+    "dsl",
+    "deployment",
+    "modeling"
+  ]
+}
