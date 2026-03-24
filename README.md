@@ -48,7 +48,7 @@ Or reference them naturally in conversation — Claude will activate the appropr
 
 ## Companion Plugin
 
-[AI-Assisted Project Orchestration Skills](https://github.com/jrjsmrtn/ai-assisted-project-orchestration-skills) handles initial project setup (`setup-architecture-as-code` creates the directory structure, symlinks, and Makefile targets). This plugin focuses on the modeling work itself.
+[AI-Assisted Project Orchestration Skills](https://github.com/jrjsmrtn/project-orchestration-skills) handles initial project setup (`setup-architecture-as-code` creates the directory structure, symlinks, and Makefile targets). This plugin focuses on the modeling work itself.
 
 ## License
 
