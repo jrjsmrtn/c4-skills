@@ -1,0 +1,16 @@
+{
+  "name": "c4-skills",
+  "owner": {
+    "name": "Georges Martin",
+    "email": "jrjsmrtn@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "c4-skills",
+      "source": {
+        "source": "url",
+        "url": "git@github.com:jrjsmrtn/c4-skills.git"
+      }
+    }
+  ]
+}

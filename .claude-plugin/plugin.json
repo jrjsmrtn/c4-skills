@@ -1,7 +1,8 @@
 {
   "name": "c4-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "C4 architecture modeling and Structurizr DSL skills for creating, evolving, reviewing, and deploying software architecture models",
+  "repository": "https://github.com/jrjsmrtn/c4-skills",
   "author": {
     "name": "Georges Martin",
     "email": "jrjsmrtn@gmail.com"

@@ -460,20 +460,72 @@ Custom styles override theme defaults.
 
 ```dsl
 !include <file>                        # inline a DSL fragment
-!include <directory>                   # include all .dsl files in directory
+!include <directory>                   # include all .dsl files in directory (alphabetically)
 !include <url>                         # include from HTTPS URL
 ```
 
-Content is inlined into the parent document. Relative paths resolve from the parent file.
+Content is **literally inlined** into the parent document. Relative paths resolve from the parent file's directory and **must stay within the same directory or a subdirectory** — `../` paths are not allowed.
+
+Key behaviors:
+- **Directory includes are recursive** — subdirectories are processed too
+- **Alphabetical ordering** — files sorted with `Arrays.sort`, so use numeric prefixes for ordering control
+- **Hidden files skipped** — `.DS_Store` and dotfiles are ignored
+- **No deduplication** — the same file included from multiple places is inlined multiple times
+
+**Duplicate identifier restriction**: if an included fragment defines an identifier that the including file also defines, Structurizr errors. There is no merge or override — plan fragment boundaries carefully.
 
 ### !docs and !adrs
 
 ```dsl
-softwareSystem "System" {
-    !docs docs/architecture            # attach markdown documentation
-    !adrs docs/adr                     # attach ADRs (adrtools format by default)
+workspace "System" "Description" {
+    !adrs docs/adr                     # attach ADRs at workspace level
+    !docs docs/architecture             # attach documentation at workspace level
 }
 ```
+
+Can also be scoped to a softwareSystem or container:
+
+```dsl
+softwareSystem "System" {
+    !docs docs/system-docs
+    !adrs docs/adr
+}
+```
+
+**Path restriction**: same as `!include` — paths must be within or below the DSL file's directory. Use a symlink (`architecture/docs -> ../docs`) if workspace.dsl is in a subdirectory.
+
+#### !docs authoring conventions
+
+**Do not point `!docs` at Diátaxis directories** (`explanation/`, `howto/`, etc.). Structurizr silently strips h1 headings — it auto-generates h1 from the element name. Diátaxis docs use h1 as their title, so those titles would vanish. Use a dedicated `docs/architecture/` directory for Structurizr-specific documentation, separate from Diátaxis content.
+
+Files in the `!docs` directory are imported **alphabetically by filename** — use numeric prefixes for ordering:
+
+```
+docs/architecture/
+├── 01-context.md
+├── 02-containers.md
+├── 03-deployment.md
+└── images/
+    └── overview.png
+```
+
+Heading level behavior in Structurizr's documentation renderer:
+- **h1 (`#`)** — **ignored/hidden**; auto-generated from the element name
+- **h2 (`##`)** — becomes the numbered section title in navigation (e.g., `1 Context`)
+- **h3 (`###`)** — sub-sections (e.g., `1.1 Overview`), appear in navigation
+- **h4+ (`####`)** — numbered but excluded from navigation
+
+Images in the directory and subdirectories are automatically imported.
+
+#### !adrs format requirements (adrtools default)
+
+- Filename: **4-digit zero-padded** prefix (e.g., `0001-record-architecture-decisions.md`)
+- Title line: `# N. Title Text` (number, period, space, title — adrtools format)
+- Date: `Date: yyyy-MM-dd` (ISO 8601)
+- Status section: `## Status` heading, status on next non-blank line (first word taken)
+- Cross-references: `Superseded by [ADR-0005](0005-new-approach.md)` parsed as links between ADRs
+
+**Pitfall**: the adrtools importer processes **every `.md` file** in the directory and expects a 4-digit prefix in the filename. A `README.md` or any non-ADR markdown file in `docs/adr/` will cause a parse error. Use YAML for the ADR index (`docs/adr/index.yml`) — non-`.md` files are ignored. The MADR importer is safer — it filters filenames to `\d{4}-.+?.md` and naturally skips non-conforming files.
 
 ADR importers: `adrtools` (default), `madr`, `log4brains`:
 
@@ -549,13 +601,99 @@ workspace extends parent.dsl {
 }
 ```
 
+## Multiple Workspaces
+
+When a system is large enough that a single workspace becomes unwieldy, split into focused workspaces — one master overview plus per-subsystem detail workspaces.
+
+### Layout
+
+```
+architecture/
+├── workspace.dsl                    # Master: all subsystems at container level
+├── <project>-<subsystem>-workspace.dsl  # Focused: one subsystem at component level
+├── shared/
+│   └── _styles.dsl                  # Shared styles via !include
+└── docs -> ../docs                  # Symlink for !adrs and !docs
+```
+
+### How focused workspaces relate to the master
+
+The master workspace models all subsystems as **containers** within one softwareSystem. Each focused workspace **promotes** its subsystem to a top-level softwareSystem with full container/component detail, and declares other subsystems as one-line "Sibling" stubs:
+
+```dsl
+# In forge-build-workspace.dsl:
+forgeSystem   = softwareSystem "Forge System"   "Requests package builds for Tier 2/3 hosts" "Sibling"
+forgeRuntime  = softwareSystem "Forge Runtime"  "Policy engine, secrets, event log" "Sibling"
+
+forgeBuild = softwareSystem "Forge Build" "Pluggable build system" {
+    # ... full container/component detail ...
+}
+```
+
+Sibling descriptions are **intentionally context-specific** — they explain how that subsystem relates to *this* workspace's focus, not a generic description.
+
+### What can be shared via `!include`
+
+| Fragment | Shareable? | Why |
+|----------|-----------|-----|
+| Styles | Yes | Identical across workspaces, no identifier clashes |
+| People | No | Descriptions are context-specific per workspace |
+| Sibling stubs | No | Identifier clashes with primary system; descriptions context-specific |
+| External systems | No | Descriptions vary by workspace context |
+
+Shared styles pattern:
+
+```dsl
+views {
+    # ...
+    styles {
+        !include shared/_styles.dsl
+    }
+}
+```
+
+### Each workspace is self-contained
+
+Every focused workspace must repeat `!adrs docs/adr` and `!docs docs/architecture` — these are per-workspace, not inherited. Structurizr Lite renders one workspace at a time.
+
+### `workspace extends` limitations
+
+`workspace extends parent.dsl` inherits all parent identifiers, but only supports **single-parent** inheritance. Child workspaces CAN override parent styles (merge semantics). It works well when the child uses the same modeling approach as the parent. It does **not** work when focused workspaces promote containers to top-level systems (different abstraction levels).
+
+### Structurizr Lite with multiple workspaces
+
+Structurizr Lite can serve multiple workspaces from numbered subdirectories. Create `structurizr.properties` in the mounted directory:
+
+```properties
+structurizr.workspaces=13
+```
+
+Then organize workspaces in numbered directories (`1-master/`, `2-build/`, etc.). Alternatively, use `STRUCTURIZR_WORKSPACE_FILENAME` to select a specific workspace file.
+
+### Simon Brown's shared fragment pattern
+
+For multi-domain organizations, share model fragments across independent workspaces:
+
+```
+shared/
+  model.dsl              # shared model (systems, relationships)
+domainA/
+  workspace.dsl          # !include ../shared/model.dsl + domain-specific views
+domainB/
+  workspace.dsl          # !include ../shared/model.dsl + domain-specific views
+```
+
+This avoids `workspace extends` single-parent limitation and allows each workspace to compile independently.
+
 ## Validation
 
 Always validate after changes:
 
 ```bash
+# Mount project root so docs symlink resolves
 podman run --rm \
-  -v "$(pwd)/architecture:/usr/local/structurizr" \
+  -v "$(pwd):/usr/local/structurizr" \
+  -w /usr/local/structurizr/architecture \
   structurizr/cli validate -workspace workspace.dsl
 ```
 
