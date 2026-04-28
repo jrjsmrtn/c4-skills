@@ -1,25 +1,16 @@
+<!-- SPDX-FileCopyrightText: 2026 Georges Martin <jrjsmrtn@gmail.com> -->
+<!-- SPDX-License-Identifier: MIT -->
+
 # C4 Architecture Skills
 
 A Claude Code plugin providing skills for C4 architecture modeling and Structurizr DSL.
 
 ## Installation
 
-### Direct Installation
+Install via the [jrjsmrtn-skills](https://github.com/jrjsmrtn/jrjsmrtn-skills) marketplace:
 
 ```
-/plugin install github:jrjsmrtn/c4-skills
-```
-
-### Via Project Settings
-
-Add to your project's `.claude/settings.json`:
-
-```json
-{
-  "plugins": [
-    "github:jrjsmrtn/c4-skills"
-  ]
-}
+/plugin install github:jrjsmrtn/jrjsmrtn-skills
 ```
 
 ## Included Skills
