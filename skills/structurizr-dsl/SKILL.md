@@ -694,7 +694,7 @@ Always validate after changes:
 podman run --rm \
   -v "$(pwd):/usr/local/structurizr" \
   -w /usr/local/structurizr/architecture \
-  structurizr/cli validate -workspace workspace.dsl
+  structurizr/structurizr validate -workspace workspace.dsl
 ```
 
 ## Common Patterns
