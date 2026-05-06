@@ -9,7 +9,7 @@ Claude Code plugin providing C4 architecture modeling and Structurizr DSL skills
 | Skill | Purpose |
 |-------|---------|
 | `c4-model` | Create and evolve C4 architecture models — abstractions, diagram types, notation rules, modeling decisions |
-| `c4-review` | Review models for notation compliance, completeness, and common mistakes (7-phase checklist) |
+| `c4-review` | Review models for notation compliance, completeness, and common mistakes (8-phase checklist incl. `validate` + `inspect`) |
 | `structurizr-dsl` | Structurizr DSL syntax reference — elements, views, styles, expressions, directives, patterns |
 | `c4-deployment` | Model deployment environments — deployment/infrastructure nodes, instances, cloud and on-prem patterns |
 
@@ -39,5 +39,4 @@ c4-skills/
 
 - Skills run in the target project's working directory
 - Structurizr DSL files are expected in an `architecture/` directory
-- Validation uses `structurizr/cli` container via podman
-- Visualization uses `structurizr/lite` container via podman
+- Validation, export, and local visualization use the consolidated `structurizr/structurizr` container via podman (replaces the deprecated `structurizr/cli` and `structurizr/lite` images)

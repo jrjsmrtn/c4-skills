@@ -140,7 +140,7 @@ For each relationship:
 
 - Add the element to relevant views using `include`
 - Decide if a new view is needed
-- Validate with `structurizr/cli`
+- Validate with `structurizr/structurizr`
 
 ## Common Modeling Decisions
 

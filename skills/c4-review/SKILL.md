@@ -26,17 +26,29 @@ Review C4 architecture models for notation compliance, completeness, and common 
 
 ### Phase 1: Syntax Validation
 
-Run structurizr/cli to catch syntax errors before manual review:
+Run structurizr/structurizr to catch syntax errors before manual review:
 
 ```bash
 podman run --rm \
   -v "$(pwd)/architecture:/usr/local/structurizr" \
-  structurizr/cli validate -workspace workspace.dsl
+  structurizr/structurizr validate -workspace workspace.dsl
 ```
 
 If validation fails, fix syntax errors first. Do not proceed with review until the model parses cleanly.
 
-### Phase 2: Element Review
+### Phase 2: Workspace Inspection
+
+Run the `inspect` subcommand to surface Checkstyle-style violations (missing descriptions, duplicate names, duplicate view keys, duplicate relationship descriptions, etc.):
+
+```bash
+podman run --rm \
+  -v "$(pwd)/architecture:/usr/local/structurizr" \
+  structurizr/structurizr inspect -workspace workspace.dsl -severity error,warning
+```
+
+The exit code equals the number of violations. Severity levels can be tuned per element via `structurizr.inspection.*` workspace properties (`ignore`, `info`, `warning`, `error`).
+
+### Phase 3: Element Review (manual)
 
 Check every element in the model against these criteria:
 
@@ -67,7 +79,7 @@ Check every element in the model against these criteria:
 - [ ] Components are within a single container (not spanning containers)
 - [ ] The component diagram adds genuine value (if not, recommend removing it)
 
-### Phase 3: Relationship Review
+### Phase 4: Relationship Review
 
 Check every relationship:
 
@@ -94,7 +106,7 @@ Suggest specific alternatives for vague labels:
 - [ ] No bidirectional relationships (split into two if needed)
 - [ ] Implied relationships make sense (e.g., user → container implies user → system)
 
-### Phase 4: View Review
+### Phase 5: View Review
 
 Check each view:
 
@@ -129,7 +141,7 @@ Check each view:
 - [ ] Shows deployment nodes, not just containers
 - [ ] Infrastructure nodes (load balancers, DNS, firewalls) are included where relevant
 
-### Phase 5: Style Review
+### Phase 6: Style Review
 
 - [ ] People use `shape Person`
 - [ ] Databases use `shape Cylinder`
@@ -138,7 +150,7 @@ Check each view:
 - [ ] Tags are used for styling (not hardcoded per element)
 - [ ] Consider color blindness — don't rely on color alone to convey meaning
 
-### Phase 6: Completeness Check
+### Phase 7: Completeness Check
 
 - [ ] All known users/personas are represented
 - [ ] All external system integrations are modeled
@@ -147,7 +159,7 @@ Check each view:
 - [ ] No orphaned elements (elements with no relationships)
 - [ ] System context and container views exist at minimum
 
-### Phase 7: Structural Issues
+### Phase 8: Structural Issues
 
 - [ ] `!identifiers hierarchical` is used (recommended for non-trivial models)
 - [ ] Identifiers are descriptive (`api`, `database`, not `c1`, `c2`)
@@ -160,13 +172,14 @@ Check each view:
 
 Produce a review summary with:
 
-1. **Validation result**: Pass/fail from structurizr/cli
-2. **Issues found**: Categorized as:
+1. **Validation result**: Pass/fail from structurizr/structurizr `validate`
+2. **Inspection violations**: Count and categorization from structurizr/structurizr `inspect`
+3. **Issues found**: Categorized as:
    - **Error**: Incorrect abstraction, missing required elements, wrong notation
    - **Warning**: Vague labels, missing descriptions, potential confusion
    - **Suggestion**: Style improvements, optional views, organizational improvements
-3. **Completeness assessment**: What's missing relative to the known system
-4. **Positive observations**: What the model does well (helps calibrate quality)
+4. **Completeness assessment**: What's missing relative to the known system
+5. **Positive observations**: What the model does well (helps calibrate quality)
 
 ## Common Anti-Patterns
 
