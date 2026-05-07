@@ -1,8 +1,10 @@
 ---
-# SPDX-FileCopyrightText: 2025 Georges Martin <jrjsmrtn@gmail.com>
-# SPDX-License-Identifier: MIT
 name: c4-deployment
 description: Model deployment environments using C4 deployment diagrams and Structurizr DSL. Use when adding deployment views, modeling infrastructure, documenting production/staging environments, or mapping containers to infrastructure.
+license: MIT
+metadata:
+  author: "Georges Martin <jrjsmrtn@gmail.com>"
+  version: "0.1.4"
 ---
 
 # C4 Deployment

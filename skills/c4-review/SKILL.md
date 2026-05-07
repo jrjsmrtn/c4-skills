@@ -1,8 +1,10 @@
 ---
-# SPDX-FileCopyrightText: 2025 Georges Martin <jrjsmrtn@gmail.com>
-# SPDX-License-Identifier: MIT
 name: c4-review
 description: Review C4 architecture models for notation compliance, completeness, and common mistakes. Use when reviewing architecture PRs, auditing existing models, validating model quality, or before publishing architecture documentation.
+license: MIT
+metadata:
+  author: "Georges Martin <jrjsmrtn@gmail.com>"
+  version: "0.1.4"
 ---
 
 # C4 Review
