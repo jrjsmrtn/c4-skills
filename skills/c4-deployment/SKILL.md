@@ -1,10 +1,10 @@
 ---
 name: c4-deployment
 description: Model deployment environments using C4 deployment diagrams and Structurizr DSL. Use when adding deployment views, modeling infrastructure, documenting production/staging environments, or mapping containers to infrastructure.
-license: MIT
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.4"
+  version: "0.1.5"
+license: MIT
 ---
 
 # C4 Deployment
