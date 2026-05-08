@@ -1,10 +1,10 @@
 ---
 name: c4-model
 description: Create and evolve C4 architecture models with proper abstractions, diagram types, and notation. Use when adding elements to a C4 model, choosing diagram types, modeling relationships, or making architecture modeling decisions.
-license: MIT
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.4"
+  version: "0.1.5"
+license: MIT
 ---
 
 # C4 Model
