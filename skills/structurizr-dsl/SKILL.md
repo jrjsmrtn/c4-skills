@@ -3,7 +3,7 @@ name: structurizr-dsl
 description: Structurizr DSL syntax reference and patterns for writing C4 architecture models. Use when writing or editing workspace.dsl files, looking up DSL syntax, implementing specific patterns, or troubleshooting DSL errors.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.5"
+  version: "0.1.6"
 license: MIT
 ---
 
@@ -623,11 +623,11 @@ architecture/
 The master workspace models all subsystems as **containers** within one softwareSystem. Each focused workspace **promotes** its subsystem to a top-level softwareSystem with full container/component detail, and declares other subsystems as one-line "Sibling" stubs:
 
 ```dsl
-# In forge-build-workspace.dsl:
-forgeSystem   = softwareSystem "Forge System"   "Requests package builds for Tier 2/3 hosts" "Sibling"
-forgeRuntime  = softwareSystem "Forge Runtime"  "Policy engine, secrets, event log" "Sibling"
+# In payments-workspace.dsl:
+ordersSystem = softwareSystem "Orders System" "Places orders that trigger payment capture" "Sibling"
+ledgerSystem = softwareSystem "Ledger System" "Records transactions and account balances" "Sibling"
 
-forgeBuild = softwareSystem "Forge Build" "Pluggable build system" {
+payments = softwareSystem "Payments" "Card and wallet payment processing" {
     # ... full container/component detail ...
 }
 ```
@@ -692,11 +692,11 @@ This avoids `workspace extends` single-parent limitation and allows each workspa
 Always validate after changes:
 
 ```bash
-# Mount project root so docs symlink resolves
+# Mount the PROJECT ROOT to /work so the !adrs/!docs symlinks resolve,
+# then point at the workspace file under the architecture/ subdir.
 podman run --rm \
-  -v "$(pwd):/usr/local/structurizr" \
-  -w /usr/local/structurizr/architecture \
-  structurizr/structurizr validate -workspace workspace.dsl
+  -v "$(pwd):/work:z" \
+  structurizr/structurizr validate -w /work/architecture/workspace.dsl
 ```
 
 ## Common Patterns

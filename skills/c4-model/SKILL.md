@@ -3,7 +3,7 @@ name: c4-model
 description: Create and evolve C4 architecture models with proper abstractions, diagram types, and notation. Use when adding elements to a C4 model, choosing diagram types, modeling relationships, or making architecture modeling decisions.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.5"
+  version: "0.1.6"
 license: MIT
 ---
 
@@ -18,6 +18,11 @@ Create and evolve C4 architecture models with correct abstractions, diagram type
 - Modeling relationships between elements
 - Evolving an existing model as the system grows
 - Choosing the right level of abstraction for a diagram
+
+## Required Inputs
+
+- An existing C4 model (a Structurizr `workspace.dsl`, conventionally under `architecture/`), or the intent to start one.
+- The system or scope being modeled and its intended audience (business, technical staff, or developers) — this drives diagram-type selection.
 
 ## C4 Abstractions
 
@@ -315,6 +320,20 @@ Use specific labels, not "uses":
 | Container | Moderate | Low — create and maintain |
 | Component | Fast during development | Medium — create only if valuable |
 | Code | Very fast | None — generate on demand, don't maintain |
+
+## Validation
+
+Before considering a model change complete, confirm:
+
+- Every element states its type (Person, Software System, Container, Component) and carries a 1-2 sentence description.
+- Every relationship is unidirectional, labeled with intent (not "uses"), and inter-container relationships name a protocol/technology.
+- Containers and components specify their technology.
+
+Then validate the DSL. Mount the project root (not just `architecture/`, so `!adrs`/`!docs` symlinks resolve) and point at the workspace file:
+
+```
+podman run --rm -v "$(pwd):/work:z" structurizr/structurizr validate -w /work/architecture/workspace.dsl
+```
 
 ## Related Skills
 

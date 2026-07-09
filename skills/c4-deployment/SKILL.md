@@ -3,7 +3,7 @@ name: c4-deployment
 description: Model deployment environments using C4 deployment diagrams and Structurizr DSL. Use when adding deployment views, modeling infrastructure, documenting production/staging environments, or mapping containers to infrastructure.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.5"
+  version: "0.1.6"
 license: MIT
 ---
 
@@ -18,6 +18,12 @@ Model deployment environments using C4 deployment diagrams and Structurizr DSL.
 - Modeling multiple environments (production, staging, development)
 - Showing infrastructure components (load balancers, DNS, firewalls, CDNs)
 - Communicating deployment architecture to operations teams
+
+## Required Inputs
+
+- An existing C4 model (`workspace.dsl`) with the software system and its containers already defined
+- Knowledge of the target environment's real infrastructure — hosts, cloud services, orchestrators, instance counts
+- Which environment(s) to model (production, staging, development)
 
 ## Key Concepts
 
@@ -497,6 +503,16 @@ When modeling deployment, verify:
 - [ ] Cloud provider themes are applied if using AWS/Azure/GCP
 - [ ] `autoLayout lr` is used (left-to-right often works better for deployment)
 - [ ] Each deployment view is scoped to one environment
+
+## Validation
+
+After adding deployment views, validate the workspace. Mount the project root (so any `!adrs` / `!docs` references resolve) and point at the DSL file:
+
+```bash
+podman run --rm -v "$(pwd):/work:z" structurizr/structurizr validate -w /work/architecture/workspace.dsl
+```
+
+See `c4-review` for a full model review.
 
 ## Related Skills
 

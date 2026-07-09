@@ -3,7 +3,7 @@ name: c4-review
 description: Review C4 architecture models for notation compliance, completeness, and common mistakes. Use when reviewing architecture PRs, auditing existing models, validating model quality, or before publishing architecture documentation.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.5"
+  version: "0.1.6"
 license: MIT
 ---
 
@@ -32,9 +32,11 @@ Run structurizr/structurizr to catch syntax errors before manual review:
 
 ```bash
 podman run --rm \
-  -v "$(pwd)/architecture:/usr/local/structurizr" \
-  structurizr/structurizr validate -workspace workspace.dsl
+  -v "$(pwd):/work:z" \
+  structurizr/structurizr validate -w /work/architecture/workspace.dsl
 ```
+
+Mount the project root (not just `architecture/`) so `!adrs` / `!docs` symlinks resolve.
 
 If validation fails, fix syntax errors first. Do not proceed with review until the model parses cleanly.
 
@@ -44,8 +46,8 @@ Run the `inspect` subcommand to surface Checkstyle-style violations (missing des
 
 ```bash
 podman run --rm \
-  -v "$(pwd)/architecture:/usr/local/structurizr" \
-  structurizr/structurizr inspect -workspace workspace.dsl -severity error,warning
+  -v "$(pwd):/work:z" \
+  structurizr/structurizr inspect -w /work/architecture/workspace.dsl -severity error,warning
 ```
 
 The exit code equals the number of violations. Severity levels can be tuned per element via `structurizr.inspection.*` workspace properties (`ignore`, `info`, `warning`, `error`).
@@ -264,6 +266,14 @@ When reviewing a C4 model for an Elixir/OTP system, check these additional items
 - [ ] Erlang distribution / clustering is shown between BEAM nodes
 - [ ] EPMD or DNS-based discovery is an infrastructure node (if architecturally relevant)
 - [ ] Hot code upgrades, if used, are noted in deployment node properties
+
+## Validation
+
+The review is complete when:
+
+- `validate` passes (the model parses cleanly) and the `inspect` violation count has been triaged
+- Every phase checklist (elements, relationships, views, style, completeness, structure) has been walked
+- The Output Format summary is produced with issues categorized Error / Warning / Suggestion
 
 ## Related Skills
 
