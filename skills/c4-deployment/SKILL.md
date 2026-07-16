@@ -3,7 +3,7 @@ name: c4-deployment
 description: Model deployment environments using C4 deployment diagrams and Structurizr DSL. Use when adding deployment views, modeling infrastructure, documenting production/staging environments, or mapping containers to infrastructure.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.6"
+  version: "0.1.7"
 license: MIT
 ---
 
@@ -510,6 +510,12 @@ After adding deployment views, validate the workspace. Mount the project root (s
 
 ```bash
 podman run --rm -v "$(pwd):/work:z" structurizr/structurizr validate -w /work/architecture/workspace.dsl
+```
+
+Then lint the model (violations by severity; exit code = the violation count):
+
+```bash
+podman run --rm -v "$(pwd):/work:z" structurizr/structurizr inspect -w /work/architecture/workspace.dsl -s error,warning
 ```
 
 See `c4-review` for a full model review.

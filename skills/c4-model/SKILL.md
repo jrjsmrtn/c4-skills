@@ -3,7 +3,7 @@ name: c4-model
 description: Create and evolve C4 architecture models with proper abstractions, diagram types, and notation. Use when adding elements to a C4 model, choosing diagram types, modeling relationships, or making architecture modeling decisions.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.6"
+  version: "0.1.7"
 license: MIT
 ---
 
@@ -333,6 +333,12 @@ Then validate the DSL. Mount the project root (not just `architecture/`, so `!ad
 
 ```
 podman run --rm -v "$(pwd):/work:z" structurizr/structurizr validate -w /work/architecture/workspace.dsl
+```
+
+Then lint it with `inspect` (reports violations by severity; exit code = the violation count):
+
+```
+podman run --rm -v "$(pwd):/work:z" structurizr/structurizr inspect -w /work/architecture/workspace.dsl -s error,warning
 ```
 
 ## Related Skills

@@ -3,7 +3,7 @@ name: structurizr-dsl
 description: Structurizr DSL syntax reference and patterns for writing C4 architecture models. Use when writing or editing workspace.dsl files, looking up DSL syntax, implementing specific patterns, or troubleshooting DSL errors.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.6"
+  version: "0.1.7"
 license: MIT
 ---
 
@@ -698,6 +698,16 @@ podman run --rm \
   -v "$(pwd):/work:z" \
   structurizr/structurizr validate -w /work/architecture/workspace.dsl
 ```
+
+Beyond the parse check, run `inspect` to lint the model against Structurizr's inspection rules (missing descriptions, duplicate names/keys, etc.). Its exit code equals the number of violations, so it doubles as a CI gate:
+
+```bash
+podman run --rm \
+  -v "$(pwd):/work:z" \
+  structurizr/structurizr inspect -w /work/architecture/workspace.dsl -s error,warning
+```
+
+`-s`/`--severity` filters which levels report (`error`, `warning`, `info`, `ignore`); tune per-element thresholds via `structurizr.inspection.*` workspace properties.
 
 ## Common Patterns
 
