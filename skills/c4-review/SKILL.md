@@ -3,7 +3,7 @@ name: c4-review
 description: Review C4 architecture models for notation compliance, completeness, and common mistakes. Use when reviewing architecture PRs, auditing existing models, validating model quality, or before publishing architecture documentation.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.7"
+  version: "0.1.8"
 license: MIT
 ---
 

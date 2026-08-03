@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Community health files: `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (drafted, not yet tracked).
 
+## [0.1.8] - 2026-08-03
+
+### Changed
+
+- **Adopted `lefthook` for committed, reproducible git hooks.** The `gitleaks` hook previously lived
+  only in `.git/hooks/pre-commit`, which git does not track — it did not survive a fresh clone and did
+  not exist on other machines, on a repo whose purpose includes keeping homelab details out of public
+  GitHub. `lefthook.yml` is committed, so `lefthook install` reproduces the gates anywhere.
+- Adds `claude plugin validate` alongside `gitleaks`, verified complementary with zero overlap: the
+  validator catches manifest spec drift, while the meta-repo's consistency gate catches
+  version-lockstep and `name` != directory mismatches. Neither catches the other's cases.
+- Both checks **fail open** when their tool is absent — these repos are public, and a missing local
+  tool must not block an external contribution. CI remains the enforcement backstop.
+
 ## [0.1.7] - 2026-07-16
 
 ### Added

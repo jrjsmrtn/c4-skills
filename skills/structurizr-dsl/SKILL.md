@@ -3,7 +3,7 @@ name: structurizr-dsl
 description: Structurizr DSL syntax reference and patterns for writing C4 architecture models. Use when writing or editing workspace.dsl files, looking up DSL syntax, implementing specific patterns, or troubleshooting DSL errors.
 metadata:
   author: "Georges Martin <jrjsmrtn@gmail.com>"
-  version: "0.1.7"
+  version: "0.1.8"
 license: MIT
 ---
 
